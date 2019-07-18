@@ -47,7 +47,7 @@ if(Ban::isIp('1.170.36.229')) {
 
 [![@phenrysay][twitter-image]][twitter-url]
 
-**[Pierre-Henry Soria][author-url]**, a Highly-Passionate, Zen&Cool Software Engineer.
+**[Pierre-Henry Soria][author-url]**, a highly passionate, zen &amp; cool software engineer 😊
 
 
 ## 😄 Used By...
