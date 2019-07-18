@@ -5,6 +5,8 @@
  * @license          MIT License; <https://opensource.org/licenses/MIT>
  */
 
+declare(strict_types=1);
+
 namespace PH7\NotAllowed;
 
 class Ban
@@ -25,14 +27,7 @@ class Ban
     /** @var bool */
     private static $bIsEmail = false;
 
-    /**
-     * Check if a word is not banned.
-     *
-     * @param string $sVal
-     *
-     * @return bool
-     */
-    public static function isWord($sVal)
+    public static function isWord(string $sVal): bool
     {
         self::$sFile = self::WORD_FILE;
         self::$sVal = $sVal;
@@ -40,14 +35,7 @@ class Ban
         return self::is();
     }
 
-    /**
-     * Checks if the username is not a banned username.
-     *
-     * @param string $sVal
-     *
-     * @return bool
-     */
-    public static function isUsername($sVal)
+    public static function isUsername(string $sVal): bool
     {
         self::$sFile = self::USERNAME_FILE;
         self::$sVal = $sVal;
@@ -55,12 +43,7 @@ class Ban
         return self::is();
     }
 
-    /**
-     * @param string $sVal
-     *
-     * @return bool
-     */
-    public static function isEmail($sVal)
+    public static function isEmail(string $sVal): bool
     {
         self::$sFile = self::EMAIL_FILE;
         self::$sVal = $sVal;
@@ -69,12 +52,7 @@ class Ban
         return self::is();
     }
 
-    /**
-     * @param string $sVal
-     *
-     * @return bool
-     */
-    public static function isBankAccount($sVal)
+    public static function isBankAccount(string $sVal): bool
     {
         self::$sFile = self::BANK_ACCOUNT_FILE;
         self::$sVal = $sVal;
@@ -83,12 +61,7 @@ class Ban
         return self::is();
     }
 
-    /**
-     * @param string $sVal
-     *
-     * @return bool
-     */
-    public static function isIp($sVal)
+    public static function isIp(string $sVal): bool
     {
         self::$sFile = self::IP_FILE;
         self::$sVal = $sVal;
@@ -101,7 +74,7 @@ class Ban
      *
      * @return bool Returns TRUE if the text is banned, FALSE otherwise.
      */
-    private static function is()
+    private static function is(): bool
     {
         self::setCaseInsensitive();
 
@@ -114,12 +87,7 @@ class Ban
         return self::check(self::$sVal);
     }
 
-    /**
-     * @param string $sVal
-     *
-     * @return bool Returns TRUE if the value is banned, FALSE otherwise.
-     */
-    private static function check($sVal)
+    private static function check(string $sVal): bool
     {
         $aBans = file(__DIR__ . self::DATA_DIR . self::$sFile);
 
