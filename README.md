@@ -1,4 +1,4 @@
-# Not Allowed
+# 🚫 Not Allowed 🚫
 
 **NotAllowed** is a simple lightweight PHP 7.2 library that helps you to censor words, profane words, banned IPs, banned bank accounts, etc.
 
