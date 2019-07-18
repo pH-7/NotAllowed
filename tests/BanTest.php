@@ -87,7 +87,7 @@ class BanTest extends TestCase
         return [
             ['bitch'],
             ['flipping the bird'],
-            ['you are a asshole'],
+            ['he is an asshole'],
             ['ASShole']
         ];
     }
