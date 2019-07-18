@@ -21,15 +21,18 @@ composer require ph-7/phonedetector
 Simple example of what you can do with it :)
 
 ```php
-use PierreHenry\PhoneDetector\PhoneDetector;
+use PH7\NotAllowed\Ban;
 
-$phoneDetector = new PhoneDetector();
-if ($phoneDetector->isAndroid()) {
-    echo 'Your mobile phone is Android!';
+if (Ban::isUsername('admin')) {
+    echo '"admin" is not allowed as username.';
 }
 
-if ($phoneDetector->isIos()) {
-    echo 'Your mobile phone runs with iOS';
+if (Ban::isEmail('james@spamhole.com')) {
+    echo '"@spamhole.com" domain is considered as a email spam host.';
+}
+
+if (Ban::isWord(('He is an asshole')) {
+    echo 'Please watch your mouth :-)';
 }
 ```
 
