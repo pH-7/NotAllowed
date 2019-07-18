@@ -11,13 +11,13 @@ namespace PH7\NotAllowed;
 
 class Ban
 {
-    const DATA_DIR = '/banned-data/';
-    const USERNAME_FILE = 'usernames.txt';
-    const EMAIL_FILE = 'emails.txt';
-    const WORD_FILE = 'words.txt';
-    const BANK_ACCOUNT_FILE = 'bank_accounts.txt';
-    const IP_FILE = 'ips.txt';
-    const COMMENT_SIGN = '#';
+    private const DATA_DIR = '/banned-data/';
+    private const USERNAME_FILE = 'usernames.txt';
+    private const EMAIL_FILE = 'emails.txt';
+    private const WORD_FILE = 'words.txt';
+    private const BANK_ACCOUNT_FILE = 'bank_accounts.txt';
+    private const IP_FILE = 'ips.txt';
+    private const COMMENT_SIGN = '#';
 
     /** @var string */
     private static $sFile;
