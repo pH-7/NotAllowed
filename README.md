@@ -1,8 +1,8 @@
 # 🚫 Not Allowed 🚫
 
-**NotAllowed** is a simple lightweight PHP 7.2 library that helps you to censor words, profane words, banned IPs, banned bank accounts, etc.
+**NotAllowed** is a simple lightweight PHP 7.2 library that helps you to censor words, profane words, blacklisted IPs, banned bank card numbers, etc.
 
-You can add easily new specific keywords (such as IPs, usernames, bank accounts, words, etc) to ban in `~/src/banned-data/*`
+You can add easily new specific keywords (such as IPs, usernames, bank accounts, words, etc) to ban in `~/src/banned-data/*` folder.
 
 
 ## ⚙ Server Requirement
@@ -13,7 +13,7 @@ You can add easily new specific keywords (such as IPs, usernames, bank accounts,
 ## 📓 Installation (with Composer)
 
 ```bash
-composer require ph-7/phonedetector
+composer require ph-7/notallowed
 ```
 
 ## 🎮  Usage
