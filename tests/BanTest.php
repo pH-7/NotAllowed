@@ -9,7 +9,6 @@ declare(strict_types=1);
 
 namespace PH7\NotAllowed\Tests;
 
-use PH7\GenderTypeUserCore;
 use PH7\NotAllowed\Ban;
 use PHPUnit\Framework\TestCase;
 
