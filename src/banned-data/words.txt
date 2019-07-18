@@ -1,3 +1,6 @@
+# Please open a GitHub PR if you find that some words should be added or deleted #
+# NOTE: Words are case insensitive #
+
 fucking
 fuckin
 motherfucker

@@ -88,6 +88,7 @@ class BanTest extends TestCase
         return [
             ['bitch'],
             ['flipping the bird'],
+            ['you are a asshole'],
             ['ASShole']
         ];
     }
@@ -123,7 +124,7 @@ class BanTest extends TestCase
     public function bannedIpsProvider(): array
     {
         return [
-            ['6304936989767381455']
+            ['125.123.208.182']
         ];
     }
 }
