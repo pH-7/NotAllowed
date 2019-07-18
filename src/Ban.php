@@ -17,6 +17,7 @@ class Ban
     const WORD_FILE = 'words.txt';
     const BANK_ACCOUNT_FILE = 'bank_accounts.txt';
     const IP_FILE = 'ips.txt';
+    const COMMENT_SIGN = '#';
 
     /** @var string */
     private static $sFile;
@@ -32,7 +33,7 @@ class Ban
         self::$sFile = self::WORD_FILE;
         self::$sVal = $sVal;
 
-        return self::is();
+        return self::isInSentence();
     }
 
     public static function isUsername(string $sVal): bool
@@ -56,7 +57,6 @@ class Ban
     {
         self::$sFile = self::BANK_ACCOUNT_FILE;
         self::$sVal = $sVal;
-        self::$bIsEmail = true;
 
         return self::is();
     }
@@ -69,22 +69,31 @@ class Ban
         return self::is();
     }
 
-    /**
-     * Generic method that checks if there.
-     *
-     * @return bool Returns TRUE if the text is banned, FALSE otherwise.
-     */
     private static function is(): bool
     {
         self::setCaseInsensitive();
 
-        if (self::$bIsEmail) {
+        if (self::$bIsEmail && strrchr(self::$sVal, '@')) {
             if (self::check(strrchr(self::$sVal, '@'))) {
                 return true;
             }
         }
 
         return self::check(self::$sVal);
+    }
+
+    private static function isInSentence(): bool
+    {
+        $aBans = file(__DIR__ . self::DATA_DIR . self::$sFile);
+
+        foreach ($aBans as $sBan) {
+            $sBan = trim($sBan);
+            if (!empty($sBan) && strpos($sBan, self::COMMENT_SIGN) !== 0 && stripos(self::$sVal, $sBan) !== false) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     private static function check(string $sVal): bool
