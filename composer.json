@@ -1,0 +1,37 @@
+{
+  "name": "ph-7/notallowed",
+  "description": "Filter profane words, usernames, spam/temporary emails, ",
+  "keywords": [
+    "ban",
+    "banned",
+    "not allowed",
+    "profane",
+    "profane words",
+    "filter words",
+    "filter",
+    "word",
+    "spam",
+    "temporary email",
+    "emails"
+  ],
+  "type": "library",
+  "homepage": "https://ph7.me",
+  "license": "MIT",
+  "authors": [
+    {
+      "name": "Pierre-Henry Soria",
+      "email": "hi@ph7.me"
+    }
+  ],
+  "require": {
+    "php": ">=7.2.0"
+  },
+  "require-dev": {
+    "phpunit/phpunit": "^8.2"
+  },
+  "autoload": {
+    "psr-4": {
+      "PH7\\NotAllowed\\": "src"
+    }
+  }
+}
