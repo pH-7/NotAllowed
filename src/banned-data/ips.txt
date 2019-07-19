@@ -1,4 +1,6 @@
-# IPs provided by blocklist.de
+# IPs provided by blocklist.de #
+# Indicate each IP on a new line #
+
 125.123.208.182
 1.10.140.44
 1.158.207.157

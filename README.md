@@ -16,6 +16,7 @@ You can add easily new specific keywords (such as IPs, usernames, bank accounts,
 composer require ph-7/notallowed
 ```
 
+
 ## 🎮  Usage
 
 Simple example of what you can do with it :)
