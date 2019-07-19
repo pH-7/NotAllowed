@@ -87,7 +87,15 @@ class BanTest extends TestCase
         return [
             ['bitch'],
             ['flipping the bird'],
+            ['cocksucker'],
+            ['dickhead'],
+            ['dickflipper'],
+            ['shitass'],
+            ['sonofbitch'],
+            ['son-of-a-bitch'],
             ['he is an asshole'],
+            ['fucking'],
+            ['motherfucker'],
             ['ASShole']
         ];
     }
