@@ -117,6 +117,7 @@ class BanTest extends TestCase
             ['GAYAN@getairmail.com'],
             ['mememem@GuerrillamaiL.biz'],
             ['a@tafmail.COM'],
+            ['0@zp.ua'],
             ['DDDDDDDD@THRAML.COM']
         ];
     }
@@ -131,7 +132,8 @@ class BanTest extends TestCase
     public function bannedIpsProvider(): array
     {
         return [
-            ['125.123.208.182']
+            ['125.123.208.182'],
+            ['1.34.1.60']
         ];
     }
 }
