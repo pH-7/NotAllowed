@@ -32,7 +32,7 @@ if (Ban::isEmail('james@spamhole.com')) {
     echo '"@spamhole.com" domain is considered as a email spam host.';
 }
 
-if (Ban::isWord('He is an asshole') {
+if (Ban::isWord('He is an asshole')) {
     echo 'Please watch your mouth :-)';
 }
 
