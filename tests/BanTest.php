@@ -132,7 +132,7 @@ class BanTest extends TestCase
     public function bannedIpsProvider(): array
     {
         return [
-            ['125.123.208.182'],
+            ['1.186.192.242'],
             ['1.34.1.60']
         ];
     }
