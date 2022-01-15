@@ -1,4 +1,4 @@
-name: PHP Composer
+name: Composer and Test Suite
 
 on: [push, pull_request]
 
