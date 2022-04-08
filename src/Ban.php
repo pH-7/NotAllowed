@@ -84,11 +84,11 @@ class Ban
 
     private static function isInSentence(): bool
     {
-        $aBans = file(__DIR__ . self::DATA_DIR . self::$sFile);
+        $aBannedContents = self::readFile();
 
         foreach ($aBans as $sBan) {
             $sBan = trim($sBan);
-            if (!empty($sBan) && strpos($sBan, self::COMMENT_SIGN) !== 0 && stripos(self::$sVal, $sBan) !== false) {
+            if (!empty($sBan) && strpos($sBan, self::COMMENT_SIGN) !== 0 && stripos(self::$sVal, $aBannedContents) !== false) {
                 return true;
             }
         }
@@ -98,14 +98,19 @@ class Ban
 
     private static function check(string $sVal): bool
     {
-        $aBans = file(__DIR__ . self::DATA_DIR . self::$sFile);
+        $aBannedContents = self::readFile();
 
-        return in_array($sVal, array_map('trim', $aBans), true);
+        return in_array($sVal, array_map('trim', $aBannedContents), true);
     }
 
     private static function setCaseInsensitive(): void
     {
         self::$sVal = strtolower(self::$sVal);
+    }
+    
+    private static function readFile(): array
+    {
+        return (array)file(__DIR__ . self::DATA_DIR . self::$sFile, FILE_SKIP_EMPTY_LINES);
     }
 
     /**
