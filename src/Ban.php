@@ -86,7 +86,7 @@ class Ban
     {
         $aBannedContents = self::readFile();
 
-        foreach ($aBans as $sBan) {
+        foreach ($aBannedContents as $sBan) {
             $sBan = trim($sBan);
             if (!empty($sBan) && strpos($sBan, self::COMMENT_SIGN) !== 0 && stripos(self::$sVal, $aBannedContents) !== false) {
                 return true;
