@@ -88,7 +88,7 @@ class Ban
 
         foreach ($aBannedContents as $sBan) {
             $sBan = trim($sBan);
-            if (!empty($sBan) && strpos($sBan, self::COMMENT_SIGN) !== 0 && stripos(self::$sVal, $aBannedContents) !== false) {
+            if (!empty($sBan) && strpos($sBan, self::COMMENT_SIGN) !== 0 && stripos(self::$sVal, $sBan) !== false) {
                 return true;
             }
         }
