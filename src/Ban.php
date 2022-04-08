@@ -88,7 +88,8 @@ class Ban
 
         foreach ($aBannedContents as $sBan) {
             $sBan = trim($sBan);
-            if (!empty($sBan) && strpos($sBan, self::COMMENT_SIGN) !== 0 && stripos(self::$sVal, $sBan) !== false) {
+
+            if (!empty($sBan) && !self::isCommentFound($sBan) && stripos(self::$sVal, $sBan) !== false) {
                 return true;
             }
         }
@@ -106,6 +107,11 @@ class Ban
     private static function setCaseInsensitive(): void
     {
         self::$sVal = strtolower(self::$sVal);
+    }
+    
+    private static function isCommentFound($sBan): bool
+    {
+        return strpos($sBan, self::COMMENT_SIGN) === 0;
     }
     
     private static function readFile(): array
