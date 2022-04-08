@@ -116,11 +116,11 @@ class Ban
     /**
      * Private Constructor & Cloning to prevent direct creation of object and blocking cloning.
      */
-    final private function __construct()
+    private function __construct()
     {
     }
 
-    final private function __clone()
+    private function __clone()
     {
     }
 }
