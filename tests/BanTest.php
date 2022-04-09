@@ -1,7 +1,7 @@
 <?php
 /**
  * @author           Pierre-Henry Soria <hi@ph7.me>
- * @copyright        (c) 2019, Pierre-Henry Soria. All Rights Reserved.
+ * @copyright        (c) 2019-2022, Pierre-Henry Soria. All Rights Reserved.
  * @license          MIT License; <https://opensource.org/licenses/MIT>
  */
 
@@ -12,7 +12,7 @@ namespace PH7\NotAllowed\Tests;
 use PH7\NotAllowed\Ban;
 use PHPUnit\Framework\TestCase;
 
-class BanTest extends TestCase
+final class BanTest extends TestCase
 {
     /**
      * @dataProvider bannedWordsProvider
@@ -79,9 +79,6 @@ class BanTest extends TestCase
         $this->assertFalse(Ban::isIp('127.0.0.1'));
     }
 
-    /**
-     * @return array
-     */
     public function bannedWordsProvider(): array
     {
         return [
