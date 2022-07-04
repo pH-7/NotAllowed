@@ -1,6 +1,6 @@
 {
   "name": "ph-7/notallowed",
-  "description": "Filter profane words, usernames, spam/temporary emails, ",
+  "description": "Filter profane words, usernames, spam/temporary emails, etc.",
   "keywords": [
     "ban",
     "banned",
