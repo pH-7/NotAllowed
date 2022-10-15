@@ -44,11 +44,11 @@ if(Ban::isIp('1.170.36.229')) {
 
 ## 🚀 Author
 
-[![Pierre-Henry Soria](https://avatars0.githubusercontent.com/u/1325411?s=250)](https://pierrehenry.be "Pierre-Henry - Software Developer Website :-)")
+**[Pierre-Henry Soria][author-url]**, a highly passionate, zen &amp; cool software engineer 😊
 
 [![@phenrysay][twitter-image]][twitter-url]
 
-**[Pierre-Henry Soria][author-url]**, a highly passionate, zen &amp; cool software engineer 😊
+[![Pierre-Henry Soria](https://avatars0.githubusercontent.com/u/1325411?s=220)](https://pierrehenry.be "Pierre-Henry - Software Developer Website :-)")
 
 
 ## 🧐 Used By...
