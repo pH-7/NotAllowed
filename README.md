@@ -5,7 +5,7 @@
 You can add easily new specific keywords (such as IPs, usernames, bank accounts, words, etc) to ban in `~/src/banned-data/*` folder.
 
 
-## ⚙ Server Requirement
+## 🛠 Server Requirement
 
 - [PHP 7.2](https://php.net/releases/7_2_0.php) or higher.
 
@@ -17,7 +17,7 @@ composer require ph-7/notallowed
 ```
 
 
-## 🎮  Usage
+## 🎮 Usage
 
 Simple example of what you can do with it :)
 
@@ -44,21 +44,21 @@ if(Ban::isIp('1.170.36.229')) {
 
 ## 🚀 Author
 
-[![Pierre-Henry Soria](https://avatars0.githubusercontent.com/u/1325411?s=200)](https://pierrehenry.be "My personal website :-)")
+[![Pierre-Henry Soria](https://avatars0.githubusercontent.com/u/1325411?s=250)](https://pierrehenry.be "Pierre-Henry - Software Developer Website :-)")
 
 [![@phenrysay][twitter-image]][twitter-url]
 
 **[Pierre-Henry Soria][author-url]**, a highly passionate, zen &amp; cool software engineer 😊
 
 
-## 😄 Used By...
+## 🧐 Used By...
 
 **[pH7Builder][ph7cms-url]**, a social dating webapp builder. Used here: [https://github.com/pH7Software/pH7-Social-Dating-CMS/blob/master/_protected/framework/Security/Ban/Ban.class.php](https://github.com/pH7Software/pH7-Social-Dating-CMS/blob/master/_protected/framework/Security/Ban/Ban.class.php).
 
 
-## ⚖ License
+## ⚖️ License
 
-Generously distributed under [MIT License][license-url]!
+Generously distributed under [MIT License][license-url]! 🎈
 
 
 <!-- GitHub's Markdown reference links -->
