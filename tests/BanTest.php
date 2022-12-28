@@ -22,9 +22,16 @@ final class BanTest extends TestCase
         $this->assertTrue(Ban::isWord($sWord));
     }
 
+    public function testIsBannedWords() : void {
+        $as_array = array_merge(...$this->bannedWordsProvider());
+        $this->assertNotEmpty($as_array);
+        $this->assertTrue(Ban::isWord($as_array));
+    }
+
     public function testIsNotBannedWord(): void
     {
         $this->assertFalse(Ban::isWord('hello world'));
+        $this->assertFalse(Ban::isWord(['hello world', 'goodbye world']));
     }
 
     /**
@@ -35,9 +42,17 @@ final class BanTest extends TestCase
         $this->assertTrue(Ban::isUsername($sUsername));
     }
 
+    public function testIsBannedUsernames(): void
+    {
+        $as_array = array_merge(...$this->bannedUsernamesProvider());
+        $this->assertNotEmpty($as_array);
+        $this->assertTrue(Ban::isUsername($as_array));
+    }
+
     public function testIsNotBannedUsername(): void
     {
         $this->assertFalse(Ban::isUsername('berylde66'));
+        $this->assertFalse(Ban::isUsername(['berylde66', 'rickastley1987']));
     }
 
     /**
@@ -48,9 +63,17 @@ final class BanTest extends TestCase
         $this->assertTrue(Ban::isEmail($sEmail));
     }
 
+    public function testIsBannedEmails(): void
+    {
+        $as_array = array_merge(...$this->bannedEmailsProvider());
+        $this->assertNotEmpty($as_array);
+        $this->assertTrue(Ban::isEmail($as_array));
+    }
+
     public function testIsNotBannedEmail(): void
     {
         $this->assertFalse(Ban::isEmail('pierre@henry.name'));
+        $this->assertFalse(Ban::isEmail(['pierre@henry.name', 'rick@astley.co']));
     }
 
     /**
@@ -61,9 +84,17 @@ final class BanTest extends TestCase
         $this->assertTrue(Ban::isBankAccount($sBankAccount));
     }
 
+    public function testIsBannedBankAccounts(): void
+    {
+        $as_array = array_merge(...$this->bannedBankAccountsProvider());
+        $this->assertNotEmpty($as_array);
+        $this->assertTrue(Ban::isBankAccount($as_array));
+    }
+
     public function testIsNotBannedBankAccount(): void
     {
         $this->assertFalse(Ban::isBankAccount('12161216121612161216'));
+        $this->assertFalse(Ban::isBankAccount(['12161216121612161216', '12161216121612161217']));
     }
 
     /**
@@ -74,9 +105,17 @@ final class BanTest extends TestCase
         $this->assertTrue(Ban::isIp($sIp));
     }
 
+    public function testIsBannedIps(): void
+    {
+        $as_array = array_merge(...$this->bannedIpsProvider());
+        $this->assertNotEmpty($as_array);
+        $this->assertTrue(Ban::isIp($as_array));
+    }
+
     public function testIsNotBannedIp(): void
     {
         $this->assertFalse(Ban::isIp('127.0.0.1'));
+        $this->assertFalse(Ban::isIp(['127.0.0.1', '127.0.0.2']));
     }
 
     public function bannedWordsProvider(): array

@@ -26,77 +26,77 @@ class Ban
         self::EMAIL_FILE => null
     ];
 
-    /** @var string */
-    private static string $sFile;
-
-    /** @var string */
-    private static string $sVal;
-
     /** @var bool */
     private static bool $bIsEmail = false;
 
-    public static function isWord(string $sVal): bool
+    public static function isWord(string | array $value): bool
     {
-        self::$sFile = self::WORD_FILE;
-        self::$sVal = $sVal;
+        if (is_array($value)) {
+            foreach ($value as $v)
+                if (static::isInSentence($v)) return true;
 
-        return self::isInSentence();
+            return false;
+        }
+
+        return self::isInSentence($value);
     }
 
-    public static function isUsername(string $sVal): bool
+    public static function isUsername(string | array $value): bool
     {
-        self::$sFile = self::USERNAME_FILE;
-        self::$sVal = $sVal;
-
-        return self::is();
+        return static::is_facade(self::USERNAME_FILE, $value);
     }
 
-    public static function isEmail(string $sVal): bool
+    public static function isEmail(string | array $value): bool
     {
-        self::$sFile = self::EMAIL_FILE;
-        self::$sVal = $sVal;
         self::$bIsEmail = true;
 
-        return self::is();
+        return static::is_facade(self::EMAIL_FILE, $value);
     }
 
-    public static function isBankAccount(string $sVal): bool
+    public static function isBankAccount(string | array $value): bool
     {
-        self::$sFile = self::BANK_ACCOUNT_FILE;
-        self::$sVal = $sVal;
-
-        return self::is();
+        return static::is_facade(self::BANK_ACCOUNT_FILE, $value);
     }
 
-    public static function isIp(string $sVal): bool
+    public static function isIp(string | array $value): bool
     {
-        self::$sFile = self::IP_FILE;
-        self::$sVal = $sVal;
-
-        return self::is();
+        return static::is_facade(self::IP_FILE, $value);
     }
 
-    private static function is(): bool
-    {
-        self::setCaseInsensitive();
+    private static function is_facade(string $scope, string | array $value) : bool {
+        return is_array($value)
+            ? static::isIn($scope, $value)
+            : static::is($scope, $value);
+    }
 
-        if (self::$bIsEmail && strrchr(self::$sVal, '@')) {
-            if (self::check(strrchr(self::$sVal, '@'))) {
+    private static function isIn(string $scope, array $value) : bool {
+        foreach ($value as $v)
+            if (static::is($scope, $v)) return true;
+
+        return false;
+    }
+
+    private static function is(string $scope, string $value): bool
+    {
+        self::setCaseInsensitive($value);
+
+        if (self::$bIsEmail && strrchr($value, '@')) {
+            if (self::check($scope, strrchr($value, '@'))) {
                 return true;
             }
         }
 
-        return self::check(self::$sVal);
+        return self::check($scope, $value);
     }
 
-    private static function isInSentence(): bool
+    private static function isInSentence(string $value): bool
     {
-        $aBannedContents = self::readFile();
+        $aBannedContents = self::getContents(self::WORD_FILE);
 
         foreach ($aBannedContents as $sBan) {
             $sBan = trim($sBan);
 
-            if (!empty($sBan) && !self::isCommentFound($sBan) && stripos(self::$sVal, $sBan) !== false) {
+            if (!empty($sBan) && !self::isCommentFound($sBan) && stripos($value, $sBan) !== false) {
                 return true;
             }
         }
@@ -104,16 +104,16 @@ class Ban
         return false;
     }
 
-    private static function check(string $sVal): bool
+    private static function check(string $scope, string $value): bool
     {
-        $aBannedContents = self::readFile();
+        $aBannedContents = static::getContents($scope);
 
-        return in_array($sVal, array_map('trim', $aBannedContents), true);
+        return in_array($value, array_map('trim', $aBannedContents), true);
     }
 
-    private static function setCaseInsensitive(): void
+    private static function setCaseInsensitive(string &$value): void
     {
-        self::$sVal = strtolower(self::$sVal);
+        $value = strtolower($value);
     }
 
     private static function isCommentFound($sBan): bool
@@ -121,12 +121,12 @@ class Ban
         return strpos($sBan, self::COMMENT_SIGN) === 0;
     }
 
-    private static function readFile(): array
+    private static function getContents(string $scope): array
     {
-        if (is_null(static::$cache[static::$sFile]))
-            static::$cache[static::$sFile] = (array)file(__DIR__ . self::DATA_DIR . static::$sFile, FILE_SKIP_EMPTY_LINES);
+        if (is_null(static::$cache[$scope]))
+            static::$cache[$scope] = (array)file(__DIR__ . self::DATA_DIR . $scope, FILE_SKIP_EMPTY_LINES);
 
-        return static::$cache[static::$sFile];
+        return static::$cache[$scope];
     }
 
     /**
