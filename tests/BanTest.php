@@ -11,9 +11,22 @@ namespace PH7\NotAllowed\Tests;
 
 use PH7\NotAllowed\Ban;
 use PHPUnit\Framework\TestCase;
+use ReflectionClass;
 
 final class BanTest extends TestCase
 {
+    protected function setUp(): void
+    {
+        $class = new ReflectionClass(Ban::class);
+        $cache = $class->getStaticPropertyValue('cache');
+        $clean_cache = [];
+
+        foreach (array_keys($cache) as $key)
+            $clean_cache[$key] = null;
+
+        $class->setStaticPropertyValue('cache', $clean_cache);
+    }
+
     /**
      * @dataProvider bannedWordsProvider
      */
@@ -116,6 +129,47 @@ final class BanTest extends TestCase
     {
         $this->assertFalse(Ban::isIp('127.0.0.1'));
         $this->assertFalse(Ban::isIp(['127.0.0.1', '127.0.0.2']));
+    }
+
+    public function testExtendedValueIsMerged() {
+        Ban::merge('usernames', 'rickastley1987');
+        Ban::merge('words', 'foobar');
+        Ban::merge('emails', 'foobar@example.com');
+        Ban::merge('ips', '127.0.0.1');
+        Ban::merge('bank_accounts', '4539791001744107');
+
+        $this->assertTrue(Ban::isUsername("rickastley1987"));
+        $this->assertTrue(Ban::isWord("My favorite foobar is bazz"));
+        $this->assertTrue(Ban::isEmail("foobar@example.com"));
+        $this->assertTrue(Ban::isIp("127.0.0.1"));
+        $this->assertTrue(Ban::isBankAccount("4539791001744107"));
+    }
+
+    public function testExtendedValuesIsMerged() {
+        Ban::merge('usernames', ['rickastley1987', 'rickastley123']);
+        Ban::merge('words', ['foobar', 'buzz', 'bizz', 'bozz']);
+        Ban::merge('emails', ['foobar@example.com', 'noreply@mail.me']);
+        Ban::merge('ips', ['127.0.0.1', '127.0.0.2']);
+        Ban::merge('bank_accounts', ['4539791001744107', '4539791001744108']);
+
+        $this->assertTrue(Ban::isUsername("rickastley1987"));
+        $this->assertTrue(Ban::isUsername("rickastley123"));
+        $this->assertTrue(Ban::isWord("My favorite foobar is bazz"));
+        $this->assertTrue(Ban::isWord("My favorite bazz is buzz"));
+        $this->assertTrue(Ban::isEmail("foobar@example.com"));
+        $this->assertTrue(Ban::isEmail("noreply@mail.me"));
+        $this->assertTrue(Ban::isIp("127.0.0.1"));
+        $this->assertTrue(Ban::isIp("127.0.0.2"));
+        $this->assertTrue(Ban::isBankAccount("4539791001744107"));
+        $this->assertTrue(Ban::isBankAccount("4539791001744108"));
+    }
+
+    public function testExtendedFileIsMerged() {
+        Ban::mergeFile('usernames', __DIR__ . '/./extended_usernames.txt');
+        Ban::mergeFile('words', __DIR__ . '/./extended_words.txt');
+
+        $this->assertTrue(Ban::isUsername('jtevesobs'));
+        $this->assertTrue(Ban::isWord("Nice FUPA"));
     }
 
     public function bannedWordsProvider(): array

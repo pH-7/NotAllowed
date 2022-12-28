@@ -9,6 +9,8 @@ declare(strict_types=1);
 
 namespace PH7\NotAllowed;
 
+use Exception;
+
 class Ban
 {
     private const DATA_DIR = '/banned-data/';
@@ -28,6 +30,43 @@ class Ban
 
     /** @var bool */
     private static bool $bIsEmail = false;
+
+    /**
+     * @param string $scope Possible values are: usernames, words, ips, emails, bank_accounts
+     * @param string | array $value phrases to ban
+     */
+    public static function merge(string $scope, string | array $value) : void {
+        self::setCaseInsensitive($scope);
+
+        switch ($scope) {
+            case 'usernames':
+                $target_scope = self::USERNAME_FILE;
+                break;
+            case 'ips':
+                $target_scope = self::IP_FILE;
+                break;
+            case 'emails':
+                $target_scope = self::EMAIL_FILE;
+                break;
+            case 'bank_accounts':
+                $target_scope = self::BANK_ACCOUNT_FILE;
+                break;
+            case 'words':
+                $target_scope = self::WORD_FILE;
+                break;
+            default:
+                throw new Exception("Unsupported value $scope");
+        }
+
+        static::getContents($target_scope);
+
+        $value = is_array($value) ? $value : [$value];
+        array_push(static::$cache[$target_scope], ...$value);
+    }
+
+    public static function mergeFile(string $scope, string $path) : void {
+        static::merge($scope, static::readFile(realpath($path)));
+    }
 
     public static function isWord(string | array $value): bool
     {
@@ -124,9 +163,13 @@ class Ban
     private static function getContents(string $scope): array
     {
         if (is_null(static::$cache[$scope]))
-            static::$cache[$scope] = (array)file(__DIR__ . self::DATA_DIR . $scope, FILE_SKIP_EMPTY_LINES);
+            static::$cache[$scope] = static::readFile(__DIR__ . self::DATA_DIR . $scope);
 
         return static::$cache[$scope];
+    }
+
+    private static function readFile(string $path) {
+        return (array)file($path, FILE_SKIP_EMPTY_LINES);
     }
 
     /**
