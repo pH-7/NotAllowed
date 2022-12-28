@@ -18,15 +18,22 @@ class Ban
     private const BANK_ACCOUNT_FILE = 'bank_accounts.txt';
     private const IP_FILE = 'ips.txt';
     private const COMMENT_SIGN = '#';
+    private static array $cache = [
+        self::IP_FILE => null,
+        self::USERNAME_FILE => null,
+        self::BANK_ACCOUNT_FILE => null,
+        self::WORD_FILE => null,
+        self::EMAIL_FILE => null
+    ];
 
     /** @var string */
-    private static $sFile;
+    private static string $sFile;
 
     /** @var string */
-    private static $sVal;
+    private static string $sVal;
 
     /** @var bool */
-    private static $bIsEmail = false;
+    private static bool $bIsEmail = false;
 
     public static function isWord(string $sVal): bool
     {
@@ -108,15 +115,18 @@ class Ban
     {
         self::$sVal = strtolower(self::$sVal);
     }
-    
+
     private static function isCommentFound($sBan): bool
     {
         return strpos($sBan, self::COMMENT_SIGN) === 0;
     }
-    
+
     private static function readFile(): array
     {
-        return (array)file(__DIR__ . self::DATA_DIR . self::$sFile, FILE_SKIP_EMPTY_LINES);
+        if (is_null(static::$cache[static::$sFile]))
+            static::$cache[static::$sFile] = (array)file(__DIR__ . self::DATA_DIR . static::$sFile, FILE_SKIP_EMPTY_LINES);
+
+        return static::$cache[static::$sFile];
     }
 
     /**
