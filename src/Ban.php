@@ -68,6 +68,59 @@ class Ban
         static::merge($scope, static::readFile(realpath($path)));
     }
 
+    /**
+     * Pick and choose validation paths for provided value[s].
+     *
+     * For example, if you want to validate a value is either a banned word or banned username call the method by way of:
+     * `Ban::isAny(false, true, true);`
+     *
+     * For PHP 8 you can use named parameters:
+     * `Ban::isAny(username: true, word: true);`
+     *
+     * @return bool true if the value, or any of array values, are banned based on chosen validation paths
+     */
+    public static function isAny(string | array $value,
+                                 bool $email = false,
+                                 bool $word = false,
+                                 bool $username = false,
+                                 bool $ip = false,
+                                 bool $bank_accounts = false) : bool {
+
+        if ($email && static::isEmail($value)) return true;
+        if ($word && static::isWord($value)) return true;
+        if ($username && static::isUsername($value)) return true;
+        if ($ip && static::isIp($value)) return true;
+        if ($bank_accounts && static::isBankAccount($value)) return true;
+
+        return false;
+    }
+
+    /**
+     * Pick and choose validation paths for provided values.
+     *
+     * For example, if you want to validate a value is either a banned word or banned username call the method by way of:
+     * `Ban::isAll(false, true, true);`
+     *
+     * For PHP 8 you can use named parameters:
+     * `Ban::isAll(username: true, word: true);`
+     *
+     * @return bool true only if _ALL_ of the provided values are banned across all the paths selected
+     */
+    public static function isAll(array $value,
+                                 bool $email = false,
+                                 bool $word = false,
+                                 bool $username = false,
+                                 bool $ip = false,
+                                 bool $bank_accounts = false) : bool {
+
+        foreach ($value as $v) {
+            if (!static::isAny($v, $email, $word, $username, $ip, $bank_accounts))
+                return false;
+        }
+
+        return true;
+    }
+
     public static function isWord(string | array $value): bool
     {
         if (is_array($value)) {

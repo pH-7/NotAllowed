@@ -131,6 +131,28 @@ final class BanTest extends TestCase
         $this->assertFalse(Ban::isIp(['127.0.0.1', '127.0.0.2']));
     }
 
+    public function testIsAny() {
+        $this->assertTrue(Ban::isAny('admin', false, true, true));
+        $this->assertTrue(Ban::isAny(['admin'], false, true, true));
+        $this->assertFalse(Ban::isAny(['admin'], false, true));
+        $this->assertTrue(Ban::isAny(['good', 'good2', 'bitch', 'good3', 'a@tafmail.COM'], true, true));
+    }
+
+    public function testIsAll() {
+        //email not selected as path
+        $this->assertFalse(Ban::isAll(['a@tafmail.COM'], false, true, true, true, true));
+        //not all are banned
+        $this->assertFalse(Ban::isAll(['admin', 'goodusername', 'a@tafmail.COM', 'bitch'], true, true, true, true, true));
+        //all are banned
+        $this->assertTrue(Ban::isAny(['admin', 'a@tafmail.COM', 'bitch'], true, true, true, true, true));
+
+        $this->assertFalse(Ban::isAll(['admin', 'retard'], true, true, true, true, true));
+
+        Ban::merge('usernames', ['retard']);
+
+        $this->assertTrue(Ban::isAll(['admin', 'retard'], true, true, true, true, true));
+    }
+
     public function testExtendedValueIsMerged() {
         Ban::merge('usernames', 'rickastley1987');
         Ban::merge('words', 'foobar');
