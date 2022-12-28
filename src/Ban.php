@@ -88,8 +88,10 @@ class Ban
     public static function isEmail(string | array $value): bool
     {
         self::$bIsEmail = true;
+        $isEmail = static::is_facade(self::EMAIL_FILE, $value);
+        self::$bIsEmail = false;
 
-        return static::is_facade(self::EMAIL_FILE, $value);
+        return $isEmail;
     }
 
     public static function isBankAccount(string | array $value): bool
