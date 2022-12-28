@@ -39,8 +39,46 @@ if (Ban::isWord('He is an asshole')) {
 if(Ban::isIp('1.170.36.229')) {
     echo 'This IP address is blacklisted';
 }
+
+$userinput = 'admin';
+if (Ban::isUsername($userinput, ['root', 'sudo', 'admin'])) {
+    echo "$userinput is not allowed";
+}
+
+// Validate of the userinput is a banned word _OR_ a banned username
+if (Ban::isAny($userinput, false, true, true)) {
+    echo "$userinput is not allowed";
+}
 ```
 
+### Extending Banned Phrases
+
+You can supply your own values to be merged with the out-of-box banned-data 2 ways
+
+1. `Ban::merge(string $scope, string | array $value)`
+2. `Ban::mergeFile(string $scope, string $path)`
+
+`$scope` refers to the category of data. Possible values are currently:
+
+- usernames
+- words
+- ips
+- emails
+- bank_accounts
+
+<details>
+<summary>Example</summary>
+
+```php
+Ban::merge('usernames', ['pooter', 'hitler', '690']);
+Ban::merge('words', ['cuck', 'bomb']);
+Ban::mergeFile('emails', './my_banned_emails.txt');
+```
+</details>
+
+
+
+Now simply validate per normal conventions
 
 ## 🚀 Author
 
@@ -50,6 +88,9 @@ if(Ban::isIp('1.170.36.229')) {
 
 [![Pierre-Henry Soria](https://avatars0.githubusercontent.com/u/1325411?s=220)](https://pierrehenry.be "Pierre-Henry - Software Developer Website :-)")
 
+## 👩🏻‍💻 Helpers
+
+**[soulshined](https://github.com/soulshined)** - just a coder
 
 ## 🧐 Used By...
 
