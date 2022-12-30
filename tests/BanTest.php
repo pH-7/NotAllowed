@@ -187,8 +187,8 @@ final class BanTest extends TestCase
     }
 
     public function testExtendedFileIsMerged() {
-        Ban::mergeFile('usernames', __DIR__ . '/./extended_usernames.txt');
-        Ban::mergeFile('words', __DIR__ . '/./extended_words.txt');
+        Ban::mergeFile('usernames', __DIR__ . './banned-data/extended_usernames.txt');
+        Ban::mergeFile('words', __DIR__ . './banned-data/extended_words.txt');
 
         $this->assertTrue(Ban::isUsername('jtevesobs'));
         $this->assertTrue(Ban::isWord("Nice FUPA"));
