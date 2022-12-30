@@ -91,11 +91,21 @@ class Ban
                                  bool $ip = false,
                                  bool $bank_accounts = false) : bool {
 
-        if ($email && static::isEmail($value)) return true;
-        if ($word && static::isWord($value)) return true;
-        if ($username && static::isUsername($value)) return true;
-        if ($ip && static::isIp($value)) return true;
-        if ($bank_accounts && static::isBankAccount($value)) return true;
+        if ($email && static::isEmail($value)) {
+            return true;
+        }
+        if ($word && static::isWord($value)) {
+            return true;
+        }
+        if ($username && static::isUsername($value)) {
+            return true;
+        }
+        if ($ip && static::isIp($value)) {
+            return true;
+        }
+        if ($bank_accounts && static::isBankAccount($value)) {
+            return true;
+        }
 
         return false;
     }
@@ -119,8 +129,9 @@ class Ban
                                  bool $bank_accounts = false) : bool {
 
         foreach ($value as $v) {
-            if (!static::isAny($v, $email, $word, $username, $ip, $bank_accounts))
+            if (!static::isAny($v, $email, $word, $username, $ip, $bank_accounts)) {
                 return false;
+            }
         }
 
         return true;
@@ -132,8 +143,11 @@ class Ban
     public static function isWord($value): bool
     {
         if (is_array($value)) {
-            foreach ($value as $v)
-                if (static::isInSentence($v)) return true;
+            foreach ($value as $v) {
+                if (static::isInSentence($v)) {
+                    return true;
+                }
+            }
 
             return false;
         }
@@ -180,8 +194,11 @@ class Ban
     }
 
     private static function isIn(string $scope, array $value) : bool {
-        foreach ($value as $v)
-            if (static::is($scope, $v)) return true;
+        foreach ($value as $v) {
+            if (static::is($scope, $v)) {
+                return true;
+            }
+        }
 
         return false;
     }
@@ -233,8 +250,9 @@ class Ban
 
     private static function getContents(string $scope): array
     {
-        if (is_null(static::$cache[$scope]))
+        if (is_null(static::$cache[$scope])) {
             static::$cache[$scope] = static::readFile(__DIR__ . self::DATA_DIR . $scope);
+        }
 
         return static::$cache[$scope];
     }
