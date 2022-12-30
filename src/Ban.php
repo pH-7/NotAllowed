@@ -257,7 +257,7 @@ class Ban
         return static::$cache[$scope];
     }
 
-    private static function readFile(string $path) {
+    private static function readFile(string $path) : array {
         return (array)file($path, FILE_SKIP_EMPTY_LINES);
     }
 
