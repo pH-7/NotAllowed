@@ -20,7 +20,10 @@ class Ban
     private const BANK_ACCOUNT_FILE = 'bank_accounts.txt';
     private const IP_FILE = 'ips.txt';
     private const COMMENT_SIGN = '#';
-    private static array $cache = [
+    /**
+     * @var array
+     */
+    private static $cache = [
         self::IP_FILE => null,
         self::USERNAME_FILE => null,
         self::BANK_ACCOUNT_FILE => null,
@@ -32,7 +35,7 @@ class Ban
      * @param string $scope Possible values are: usernames, words, ips, emails, bank_accounts
      * @param string | array $value phrases to ban
      */
-    public static function merge(string $scope, string | array $value) : void {
+    public static function merge(string $scope, $value) : void {
         self::setCaseInsensitive($scope);
 
         switch ($scope) {
@@ -61,6 +64,10 @@ class Ban
         array_push(static::$cache[$target_scope], ...$value);
     }
 
+    /**
+     * @param string $scope Possible values are: usernames, words, ips, emails, bank_accounts
+     * @param string $path location of file
+     */
     public static function mergeFile(string $scope, string $path) : void {
         static::merge($scope, static::readFile(realpath($path)));
     }
@@ -74,9 +81,10 @@ class Ban
      * For PHP 8 you can use named parameters:
      * `Ban::isAny(username: true, word: true);`
      *
+     * @param string | array $value
      * @return bool true if the value, or any of array values, are banned based on chosen validation paths
      */
-    public static function isAny(string | array $value,
+    public static function isAny($value,
                                  bool $email = false,
                                  bool $word = false,
                                  bool $username = false,
@@ -118,7 +126,10 @@ class Ban
         return true;
     }
 
-    public static function isWord(string | array $value): bool
+    /**
+     * @param string | array $value
+     */
+    public static function isWord($value): bool
     {
         if (is_array($value)) {
             foreach ($value as $v)
@@ -130,27 +141,39 @@ class Ban
         return self::isInSentence($value);
     }
 
-    public static function isUsername(string | array $value): bool
+    /**
+     * @param string | array $value
+     */
+    public static function isUsername($value): bool
     {
         return static::is_facade(self::USERNAME_FILE, $value);
     }
 
-    public static function isEmail(string | array $value): bool
+    /**
+     * @param string | array $value
+     */
+    public static function isEmail($value): bool
     {
         return static::is_facade(self::EMAIL_FILE, $value);
     }
 
-    public static function isBankAccount(string | array $value): bool
+    /**
+     * @param string | array $value
+     */
+    public static function isBankAccount($value): bool
     {
         return static::is_facade(self::BANK_ACCOUNT_FILE, $value);
     }
 
-    public static function isIp(string | array $value): bool
+    /**
+     * @param string | array $value
+     */
+    public static function isIp($value): bool
     {
         return static::is_facade(self::IP_FILE, $value);
     }
 
-    private static function is_facade(string $scope, string | array $value) : bool {
+    private static function is_facade(string $scope, $value) : bool {
         return is_array($value)
             ? static::isIn($scope, $value)
             : static::is($scope, $value);
