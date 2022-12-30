@@ -28,9 +28,6 @@ class Ban
         self::EMAIL_FILE => null
     ];
 
-    /** @var bool */
-    private static bool $bIsEmail = false;
-
     /**
      * @param string $scope Possible values are: usernames, words, ips, emails, bank_accounts
      * @param string | array $value phrases to ban
@@ -140,11 +137,7 @@ class Ban
 
     public static function isEmail(string | array $value): bool
     {
-        self::$bIsEmail = true;
-        $isEmail = static::is_facade(self::EMAIL_FILE, $value);
-        self::$bIsEmail = false;
-
-        return $isEmail;
+        return static::is_facade(self::EMAIL_FILE, $value);
     }
 
     public static function isBankAccount(string | array $value): bool
@@ -174,7 +167,7 @@ class Ban
     {
         self::setCaseInsensitive($value);
 
-        if (self::$bIsEmail && strrchr($value, '@')) {
+        if ($scope === self::EMAIL_FILE && strrchr($value, '@')) {
             if (self::check($scope, strrchr($value, '@'))) {
                 return true;
             }
