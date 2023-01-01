@@ -9,6 +9,8 @@ declare(strict_types=1);
 
 namespace PH7\NotAllowed;
 
+use Exception;
+
 class Ban
 {
     private const DATA_DIR = '/banned-data/';
@@ -18,78 +20,182 @@ class Ban
     private const BANK_ACCOUNT_FILE = 'bank_accounts.txt';
     private const IP_FILE = 'ips.txt';
     private const COMMENT_SIGN = '#';
+    /**
+     * @var array
+     */
+    private static $cache = [
+        self::IP_FILE => null,
+        self::USERNAME_FILE => null,
+        self::BANK_ACCOUNT_FILE => null,
+        self::WORD_FILE => null,
+        self::EMAIL_FILE => null
+    ];
 
-    /** @var string */
-    private static $sFile;
+    /**
+     * @param string $scope Possible values are: usernames, words, ips, emails, bank_accounts
+     * @param string | array $value phrases to ban
+     */
+    public static function merge(string $scope, $value) : void {
+        self::setCaseInsensitive($scope);
 
-    /** @var string */
-    private static $sVal;
+        switch ($scope) {
+            case 'usernames':
+                $target_scope = self::USERNAME_FILE;
+                break;
+            case 'ips':
+                $target_scope = self::IP_FILE;
+                break;
+            case 'emails':
+                $target_scope = self::EMAIL_FILE;
+                break;
+            case 'bank_accounts':
+                $target_scope = self::BANK_ACCOUNT_FILE;
+                break;
+            case 'words':
+                $target_scope = self::WORD_FILE;
+                break;
+            default:
+                throw new Exception("Unsupported value $scope");
+        }
 
-    /** @var bool */
-    private static $bIsEmail = false;
+        static::getContents($target_scope);
 
-    public static function isWord(string $sVal): bool
-    {
-        self::$sFile = self::WORD_FILE;
-        self::$sVal = $sVal;
-
-        return self::isInSentence();
+        $value = is_array($value) ? $value : [$value];
+        array_push(static::$cache[$target_scope], ...$value);
     }
 
-    public static function isUsername(string $sVal): bool
-    {
-        self::$sFile = self::USERNAME_FILE;
-        self::$sVal = $sVal;
-
-        return self::is();
+    /**
+     * @param string $scope Possible values are: usernames, words, ips, emails, bank_accounts
+     * @param string $path location of file
+     */
+    public static function mergeFile(string $scope, string $path) : void {
+        static::merge($scope, static::readFile(realpath($path)));
     }
 
-    public static function isEmail(string $sVal): bool
-    {
-        self::$sFile = self::EMAIL_FILE;
-        self::$sVal = $sVal;
-        self::$bIsEmail = true;
+    /**
+     * Pick and choose validation paths for provided value[s].
+     *
+     * For example, if you want to validate a value is either a banned word or banned username call the method by way of:
+     * `Ban::isAny(false, true, true);`
+     *
+     * For PHP 8 you can use named parameters:
+     * `Ban::isAny(username: true, word: true);`
+     *
+     * @param string | array $value
+     * @return bool true if the value, or any of array values, are banned based on chosen validation paths
+     */
+    public static function isAny($value,
+                                 bool $email = false,
+                                 bool $word = false,
+                                 bool $username = false,
+                                 bool $ip = false,
+                                 bool $bank_accounts = false) : bool {
 
-        return self::is();
+        if ($email && static::isEmail($value)) {
+            return true;
+        }
+        if ($word && static::isWord($value)) {
+            return true;
+        }
+        if ($username && static::isUsername($value)) {
+            return true;
+        }
+        if ($ip && static::isIp($value)) {
+            return true;
+        }
+        if ($bank_accounts && static::isBankAccount($value)) {
+            return true;
+        }
+
+        return false;
     }
 
-    public static function isBankAccount(string $sVal): bool
-    {
-        self::$sFile = self::BANK_ACCOUNT_FILE;
-        self::$sVal = $sVal;
+    /**
+     * Pick and choose validation paths for provided values.
+     *
+     * For example, if you want to validate a value is either a banned word or banned username call the method by way of:
+     * `Ban::isAll(false, true, true);`
+     *
+     * For PHP 8 you can use named parameters:
+     * `Ban::isAll(username: true, word: true);`
+     *
+     * @return bool true only if _ALL_ of the provided values are banned across all the paths selected
+     */
+    public static function isAll(array $value,
+                                 bool $email = false,
+                                 bool $word = false,
+                                 bool $username = false,
+                                 bool $ip = false,
+                                 bool $bank_accounts = false) : bool {
 
-        return self::is();
-    }
-
-    public static function isIp(string $sVal): bool
-    {
-        self::$sFile = self::IP_FILE;
-        self::$sVal = $sVal;
-
-        return self::is();
-    }
-
-    private static function is(): bool
-    {
-        self::setCaseInsensitive();
-
-        if (self::$bIsEmail && strrchr(self::$sVal, '@')) {
-            if (self::check(strrchr(self::$sVal, '@'))) {
-                return true;
+        foreach ($value as $v) {
+            if (!static::isAny($v, $email, $word, $username, $ip, $bank_accounts)) {
+                return false;
             }
         }
 
-        return self::check(self::$sVal);
+        return true;
     }
 
-    private static function isInSentence(): bool
+    /**
+     * @param string | array $value
+     */
+    public static function isWord($value): bool
     {
-        $aBannedContents = self::readFile();
+        if (is_array($value)) {
+            foreach ($value as $v) {
+                if (static::isInSentence($v)) {
+                    return true;
+                }
+            }
 
-        foreach ($aBannedContents as $sBan) {
-            $sBan = trim($sBan);
+            return false;
+        }
 
-            if (!empty($sBan) && !self::isCommentFound($sBan) && stripos(self::$sVal, $sBan) !== false) {
+        return self::isInSentence($value);
+    }
+
+    /**
+     * @param string | array $value
+     */
+    public static function isUsername($value): bool
+    {
+        return static::is_facade(self::USERNAME_FILE, $value);
+    }
+
+    /**
+     * @param string | array $value
+     */
+    public static function isEmail($value): bool
+    {
+        return static::is_facade(self::EMAIL_FILE, $value);
+    }
+
+    /**
+     * @param string | array $value
+     */
+    public static function isBankAccount($value): bool
+    {
+        return static::is_facade(self::BANK_ACCOUNT_FILE, $value);
+    }
+
+    /**
+     * @param string | array $value
+     */
+    public static function isIp($value): bool
+    {
+        return static::is_facade(self::IP_FILE, $value);
+    }
+
+    private static function is_facade(string $scope, $value) : bool {
+        return is_array($value)
+            ? static::isIn($scope, $value)
+            : static::is($scope, $value);
+    }
+
+    private static function isIn(string $scope, array $value) : bool {
+        foreach ($value as $v) {
+            if (static::is($scope, $v)) {
                 return true;
             }
         }
@@ -97,26 +203,62 @@ class Ban
         return false;
     }
 
-    private static function check(string $sVal): bool
+    private static function is(string $scope, string $value): bool
     {
-        $aBannedContents = self::readFile();
+        self::setCaseInsensitive($value);
 
-        return in_array($sVal, array_map('trim', $aBannedContents), true);
+        if ($scope === self::EMAIL_FILE && strrchr($value, '@')) {
+            if (self::check($scope, strrchr($value, '@'))) {
+                return true;
+            }
+        }
+
+        return self::check($scope, $value);
     }
 
-    private static function setCaseInsensitive(): void
+    private static function isInSentence(string $value): bool
     {
-        self::$sVal = strtolower(self::$sVal);
+        $aBannedContents = self::getContents(self::WORD_FILE);
+
+        foreach ($aBannedContents as $sBan) {
+            $sBan = trim($sBan);
+
+            if (!empty($sBan) && !self::isCommentFound($sBan) && stripos($value, $sBan) !== false) {
+                return true;
+            }
+        }
+
+        return false;
     }
-    
+
+    private static function check(string $scope, string $value): bool
+    {
+        $aBannedContents = static::getContents($scope);
+
+        return in_array($value, array_map('trim', $aBannedContents), true);
+    }
+
+    private static function setCaseInsensitive(string &$value): void
+    {
+        $value = strtolower($value);
+    }
+
     private static function isCommentFound($sBan): bool
     {
         return strpos($sBan, self::COMMENT_SIGN) === 0;
     }
-    
-    private static function readFile(): array
+
+    private static function getContents(string $scope): array
     {
-        return (array)file(__DIR__ . self::DATA_DIR . self::$sFile, FILE_SKIP_EMPTY_LINES);
+        if (is_null(static::$cache[$scope])) {
+            static::$cache[$scope] = static::readFile(__DIR__ . self::DATA_DIR . $scope);
+        }
+
+        return static::$cache[$scope];
+    }
+
+    private static function readFile(string $path) : array {
+        return (array)file($path, FILE_SKIP_EMPTY_LINES);
     }
 
     /**
