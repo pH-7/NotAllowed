@@ -18,6 +18,7 @@ final class BanTest extends TestCase
     protected function setUp(): void
     {
         $class = new ReflectionClass(Ban::class);
+        $class->setAccessible(true);
         $cache = $class->getStaticPropertyValue('cache');
         $clean_cache = [];
 
