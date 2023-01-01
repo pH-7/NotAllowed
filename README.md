@@ -7,7 +7,7 @@ You can add easily new specific keywords (such as IPs, usernames, bank accounts,
 
 ## 🛠 Server Requirement
 
-- [PHP 7.2](https://php.net/releases/7_2_0.php) or higher.
+- [PHP 8.0](https://www.php.net/releases/8.0/en.php) or higher.
 
 
 ## 📓 Installation (with Composer)
