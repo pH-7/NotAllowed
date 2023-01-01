@@ -19,7 +19,7 @@ final class BanTest extends TestCase
     {
         $class = new ReflectionClass(Ban::class);
 
-        // To work with private prop, needs to be run with PHP >=8.1
+        // To work with private props, needs to be run with PHP >=8.1
         $cache = $class->getStaticPropertyValue('cache');
         $clean_cache = [];
 
