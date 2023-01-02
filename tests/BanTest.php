@@ -15,15 +15,15 @@ use ReflectionClass;
 
 final class BanTest extends TestCase
 {
-    private const REQUIRED_PHP_UNIT_TEST_VERSION = '8.1.0';
+    private const REQUIRED_PHP_VERSION = '8.1.0';
 
     protected function setUp(): void
     {
-        if (version_compare(PHP_VERSION, self::REQUIRED_PHP_UNIT_TEST_VERSION, '<')) {
+        if (version_compare(PHP_VERSION, self::REQUIRED_PHP_VERSION, '<')) {
             $this->fail(
                 sprintf(
                     'To run the unit tests, you need at least PHP %s or newer. Your current version is %s.',
-                    self::REQUIRED_PHP_UNIT_TEST_VERSION,
+                    self::REQUIRED_PHP_VERSION,
                     PHP_VERSION
                 )
             );
@@ -147,7 +147,7 @@ final class BanTest extends TestCase
         $this->assertFalse(Ban::isIp(['127.0.0.1', '127.0.0.2']));
     }
 
-    public function testIsAny()
+    public function testIsAny(): void
     {
         $this->assertTrue(Ban::isAny('admin', false, true, true));
         $this->assertTrue(Ban::isAny(['admin'], false, true, true));
@@ -155,7 +155,7 @@ final class BanTest extends TestCase
         $this->assertTrue(Ban::isAny(['good', 'good2', 'bitch', 'good3', 'a@tafmail.COM'], true, true));
     }
 
-    public function testIsAll()
+    public function testIsAll(): void
     {
         //email not selected as path
         $this->assertFalse(Ban::isAll(['a@tafmail.COM'], false, true, true, true, true));
@@ -173,7 +173,7 @@ final class BanTest extends TestCase
         $this->assertTrue(Ban::isAll(['admin', 'retard'], true, true, true, true, true));
     }
 
-    public function testExtendedValueIsMerged()
+    public function testExtendedValueIsMerged(): void
     {
         Ban::merge('usernames', 'rickastley1987');
         Ban::merge('words', 'foobar');
@@ -188,7 +188,7 @@ final class BanTest extends TestCase
         $this->assertTrue(Ban::isBankAccount("4539791001744107"));
     }
 
-    public function testExtendedValuesIsMerged()
+    public function testExtendedValuesIsMerged(): void
     {
         Ban::merge('usernames', ['rickastley1987', 'rickastley123']);
         Ban::merge('words', ['foobar', 'buzz', 'bizz', 'bozz']);
@@ -208,7 +208,7 @@ final class BanTest extends TestCase
         $this->assertTrue(Ban::isBankAccount("4539791001744108"));
     }
 
-    public function testExtendedFileIsMerged()
+    public function testExtendedFileIsMerged(): void
     {
         Ban::mergeFile('usernames', './tests/fixtures/extended_usernames.txt');
         Ban::mergeFile('words', './tests/fixtures/extended_words.txt');
