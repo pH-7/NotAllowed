@@ -15,16 +15,29 @@ use ReflectionClass;
 
 final class BanTest extends TestCase
 {
+    private const REQUIRED_PHP_UNIT_TEST_VERSION = '8.1.0';
+
     protected function setUp(): void
     {
+        if (version_compare(PHP_VERSION, self::REQUIRED_PHP_UNIT_TEST_VERSION, '<')) {
+            $this->fail(
+                sprintf(
+                    'To run the unit tests, you need at least PHP %s or newer. Your current version is %s.',
+                    self::REQUIRED_PHP_UNIT_TEST_VERSION,
+                    PHP_VERSION
+                )
+            );
+        }
+
         $class = new ReflectionClass(Ban::class);
 
         // To work with private props, needs to be run with PHP >=8.1
         $cache = $class->getStaticPropertyValue('cache');
         $clean_cache = [];
 
-        foreach (array_keys($cache) as $key)
+        foreach (array_keys($cache) as $key) {
             $clean_cache[$key] = null;
+        }
 
         $class->setStaticPropertyValue('cache', $clean_cache);
     }
@@ -37,7 +50,8 @@ final class BanTest extends TestCase
         $this->assertTrue(Ban::isWord($sWord));
     }
 
-    public function testIsBannedWords() : void {
+    public function testIsBannedWords(): void
+    {
         $as_array = array_merge(...$this->bannedWordsProvider());
         $this->assertNotEmpty($as_array);
         $this->assertTrue(Ban::isWord($as_array));
@@ -133,18 +147,22 @@ final class BanTest extends TestCase
         $this->assertFalse(Ban::isIp(['127.0.0.1', '127.0.0.2']));
     }
 
-    public function testIsAny() {
+    public function testIsAny()
+    {
         $this->assertTrue(Ban::isAny('admin', false, true, true));
         $this->assertTrue(Ban::isAny(['admin'], false, true, true));
         $this->assertFalse(Ban::isAny(['admin'], false, true));
         $this->assertTrue(Ban::isAny(['good', 'good2', 'bitch', 'good3', 'a@tafmail.COM'], true, true));
     }
 
-    public function testIsAll() {
+    public function testIsAll()
+    {
         //email not selected as path
         $this->assertFalse(Ban::isAll(['a@tafmail.COM'], false, true, true, true, true));
         //not all are banned
-        $this->assertFalse(Ban::isAll(['admin', 'goodusername', 'a@tafmail.COM', 'bitch'], true, true, true, true, true));
+        $this->assertFalse(
+            Ban::isAll(['admin', 'goodusername', 'a@tafmail.COM', 'bitch'], true, true, true, true, true)
+        );
         //all are banned
         $this->assertTrue(Ban::isAny(['admin', 'a@tafmail.COM', 'bitch'], true, true, true, true, true));
 
@@ -155,7 +173,8 @@ final class BanTest extends TestCase
         $this->assertTrue(Ban::isAll(['admin', 'retard'], true, true, true, true, true));
     }
 
-    public function testExtendedValueIsMerged() {
+    public function testExtendedValueIsMerged()
+    {
         Ban::merge('usernames', 'rickastley1987');
         Ban::merge('words', 'foobar');
         Ban::merge('emails', 'foobar@example.com');
@@ -169,7 +188,8 @@ final class BanTest extends TestCase
         $this->assertTrue(Ban::isBankAccount("4539791001744107"));
     }
 
-    public function testExtendedValuesIsMerged() {
+    public function testExtendedValuesIsMerged()
+    {
         Ban::merge('usernames', ['rickastley1987', 'rickastley123']);
         Ban::merge('words', ['foobar', 'buzz', 'bizz', 'bozz']);
         Ban::merge('emails', ['foobar@example.com', 'noreply@mail.me']);
@@ -188,9 +208,10 @@ final class BanTest extends TestCase
         $this->assertTrue(Ban::isBankAccount("4539791001744108"));
     }
 
-    public function testExtendedFileIsMerged() {
-        Ban::mergeFile('usernames', './tests/banned-data/extended_usernames.txt');
-        Ban::mergeFile('words', './tests/banned-data/extended_words.txt');
+    public function testExtendedFileIsMerged()
+    {
+        Ban::mergeFile('usernames', './tests/fixtures/extended_usernames.txt');
+        Ban::mergeFile('words', './tests/fixtures/extended_words.txt');
 
         $this->assertTrue(Ban::isUsername('jtevesobs'));
         $this->assertTrue(Ban::isWord("Nice FUPA"));
