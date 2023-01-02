@@ -1,7 +1,7 @@
 <?php
 /**
  * @author           Pierre-Henry Soria <hi@ph7.me>
- * @copyright        (c) 2012-2022, Pierre-Henry Soria. All Rights Reserved.
+ * @copyright        (c) 2012-2023, Pierre-Henry Soria. All Rights Reserved.
  * @license          MIT License; <https://opensource.org/licenses/MIT>
  */
 
@@ -14,16 +14,21 @@ use Exception;
 class Ban
 {
     private const DATA_DIR = '/banned-data/';
+    private const COMMENT_SIGN = '#';
+
     private const USERNAME_FILE = 'usernames.txt';
     private const EMAIL_FILE = 'emails.txt';
     private const WORD_FILE = 'words.txt';
     private const BANK_ACCOUNT_FILE = 'bank_accounts.txt';
     private const IP_FILE = 'ips.txt';
-    private const COMMENT_SIGN = '#';
-    /**
-     * @var array
-     */
-    private static $cache = [
+
+    private const USERNAME_TYPE = 'usernames';
+    private const EMAIL_TYPE = 'emails';
+    private const WORD_TYPE = 'words';
+    private const BANK_ACCOUNT_TYPE = 'bank_accounts';
+    private const IP_TYPE = 'ips';
+
+    private static array $cache = [
         self::IP_FILE => null,
         self::USERNAME_FILE => null,
         self::BANK_ACCOUNT_FILE => null,
@@ -33,42 +38,44 @@ class Ban
 
     /**
      * @param string $scope Possible values are: usernames, words, ips, emails, bank_accounts
-     * @param string | array $value phrases to ban
+     * @param string|array $value phrases to ban.
+     *
+     * @throws Exception When the given scope is invalid.
      */
-    public static function merge(string $scope, $value) : void {
+    public static function merge(string $scope, string|array $value): void
+    {
         self::setCaseInsensitive($scope);
 
         switch ($scope) {
-            case 'usernames':
-                $target_scope = self::USERNAME_FILE;
+            case self::USERNAME_TYPE:
+                $targetScope = self::USERNAME_FILE;
                 break;
-            case 'ips':
-                $target_scope = self::IP_FILE;
+            case self::EMAIL_TYPE:
+                $targetScope = self::EMAIL_FILE;
                 break;
-            case 'emails':
-                $target_scope = self::EMAIL_FILE;
+            case self::WORD_TYPE:
+                $targetScope = self::WORD_FILE;
                 break;
-            case 'bank_accounts':
-                $target_scope = self::BANK_ACCOUNT_FILE;
+            case self::BANK_ACCOUNT_TYPE:
+                $targetScope = self::BANK_ACCOUNT_FILE;
                 break;
-            case 'words':
-                $target_scope = self::WORD_FILE;
+            case self::IP_TYPE:
+                $targetScope = self::IP_FILE;
                 break;
             default:
                 throw new Exception("Unsupported value $scope");
         }
 
-        static::getContents($target_scope);
-
         $value = is_array($value) ? $value : [$value];
-        array_push(static::$cache[$target_scope], ...$value);
+        array_push(static::$cache[$targetScope], ...$value);
     }
 
     /**
      * @param string $scope Possible values are: usernames, words, ips, emails, bank_accounts
      * @param string $path location of file
      */
-    public static function mergeFile(string $scope, string $path) : void {
+    public static function mergeFile(string $scope, string $path): void
+    {
         static::merge($scope, static::readFile(realpath($path)));
     }
 
