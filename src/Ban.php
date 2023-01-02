@@ -67,7 +67,8 @@ class Ban
         }
 
         $value = is_array($value) ? $value : [$value];
-        array_push(static::$cache[$targetScope], ...$value);
+        $cachedValue = (array)static::$cache[$targetScope];
+        array_push($cachedValue, ...$value);
     }
 
     /**
