@@ -66,9 +66,10 @@ class Ban
                 throw new Exception("Unsupported value $scope");
         }
 
+        static::loadContents($targetScope);
+
         $value = is_array($value) ? $value : [$value];
-        $cachedValue = (array)static::$cache[$targetScope];
-        array_push($cachedValue, ...$value);
+        array_push(static::$cache[$targetScope], ...$value);
     }
 
     /**
@@ -262,11 +263,16 @@ class Ban
 
     private static function getContents(string $scope): array
     {
+        static::loadContents($scope);
+
+        return static::$cache[$scope];
+    }
+
+    private static function loadContents(string $scope): void
+    {
         if (is_null(static::$cache[$scope])) {
             static::$cache[$scope] = static::readFile(__DIR__ . self::DATA_DIR . $scope);
         }
-
-        return static::$cache[$scope];
     }
 
     private static function readFile(string $path): array
