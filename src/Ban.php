@@ -91,13 +91,14 @@ class Ban
      * @param string | array $value
      * @return bool true if the value, or any of array values, are banned based on chosen validation paths
      */
-    public static function isAny($value,
-                                 bool $email = false,
-                                 bool $word = false,
-                                 bool $username = false,
-                                 bool $ip = false,
-                                 bool $bank_accounts = false) : bool {
-
+    public static function isAny(
+        $value,
+        bool $email = false,
+        bool $word = false,
+        bool $username = false,
+        bool $ip = false,
+        bool $bank_accounts = false
+    ): bool {
         if ($email && static::isEmail($value)) {
             return true;
         }
@@ -128,13 +129,14 @@ class Ban
      *
      * @return bool true only if _ALL_ of the provided values are banned across all the paths selected
      */
-    public static function isAll(array $value,
-                                 bool $email = false,
-                                 bool $word = false,
-                                 bool $username = false,
-                                 bool $ip = false,
-                                 bool $bank_accounts = false) : bool {
-
+    public static function isAll(
+        array $value,
+        bool $email = false,
+        bool $word = false,
+        bool $username = false,
+        bool $ip = false,
+        bool $bank_accounts = false
+    ): bool {
         foreach ($value as $v) {
             if (!static::isAny($v, $email, $word, $username, $ip, $bank_accounts)) {
                 return false;
@@ -194,13 +196,15 @@ class Ban
         return static::is_facade(self::IP_FILE, $value);
     }
 
-    private static function is_facade(string $scope, $value) : bool {
+    private static function is_facade(string $scope, $value): bool
+    {
         return is_array($value)
             ? static::isIn($scope, $value)
             : static::is($scope, $value);
     }
 
-    private static function isIn(string $scope, array $value) : bool {
+    private static function isIn(string $scope, array $value): bool
+    {
         foreach ($value as $v) {
             if (static::is($scope, $v)) {
                 return true;
@@ -264,13 +268,19 @@ class Ban
         return static::$cache[$scope];
     }
 
-    private static function readFile(string $path) : array {
+    private static function readFile(string $path): array
+    {
         return (array)file($path, FILE_SKIP_EMPTY_LINES);
     }
 
     /**
      * Private Constructor & Cloning to prevent direct creation of object and blocking cloning.
      */
-    private function __construct() {}
-    private function __clone() {}
+    private function __construct()
+    {
+    }
+
+    private function __clone()
+    {
+    }
 }

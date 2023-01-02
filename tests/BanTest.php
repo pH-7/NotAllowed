@@ -1,7 +1,7 @@
 <?php
 /**
  * @author           Pierre-Henry Soria <hi@ph7.me>
- * @copyright        (c) 2019-2022, Pierre-Henry Soria. All Rights Reserved.
+ * @copyright        (c) 2019-2023, Pierre-Henry Soria. All Rights Reserved.
  * @license          MIT License; <https://opensource.org/licenses/MIT>
  */
 
