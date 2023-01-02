@@ -257,7 +257,7 @@ class Ban
 
     private static function isCommentFound($sBan): bool
     {
-        return strpos($sBan, self::COMMENT_SIGN) === 0;
+        return str_starts_with($sBan, self::COMMENT_SIGN);
     }
 
     private static function getContents(string $scope): array
