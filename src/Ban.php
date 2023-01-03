@@ -73,8 +73,10 @@ class Ban
     }
 
     /**
-     * @param string $scope Possible values are: usernames, words, ips, emails, bank_accounts
-     * @param string $path location of file
+     * @param string $scope Possible values: usernames, words, ips, emails, bank_accounts
+     * @param string $path Full path of the file.
+     *
+     * @throws Exception
      */
     public static function mergeFile(string $scope, string $path): void
     {
