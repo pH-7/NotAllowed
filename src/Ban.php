@@ -186,11 +186,11 @@ class Ban
     private static function isFacade(string $scope, string|array $value): bool
     {
         return is_array($value)
-            ? static::isIn($scope, $value)
+            ? static::doesExist($scope, $value)
             : static::is($scope, $value);
     }
 
-    private static function isIn(string $scope, array $value): bool
+    private static function doesExist(string $scope, array $value): bool
     {
         foreach ($value as $val) {
             if (static::is($scope, $val)) {
