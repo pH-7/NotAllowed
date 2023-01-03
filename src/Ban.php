@@ -89,12 +89,10 @@ class Ban
      *
      * For PHP 8 you can use named parameters:
      * `Ban::isAny(username: true, word: true);`
-     *
-     * @param string | array $value
-     * @return bool true if the value, or any of array values, are banned based on chosen validation paths
+     * @return bool TRUE if the value, or any of array values, are banned based on chosen validation paths
      */
     public static function isAny(
-        $value,
+        string|array $value,
         bool $email = false,
         bool $word = false,
         bool $username = false,
@@ -148,10 +146,7 @@ class Ban
         return true;
     }
 
-    /**
-     * @param string | array $value
-     */
-    public static function isWord($value): bool
+    public static function isWord(string|array $value): bool
     {
         if (is_array($value)) {
             foreach ($value as $v) {
@@ -166,39 +161,27 @@ class Ban
         return self::isInSentence($value);
     }
 
-    /**
-     * @param string | array $value
-     */
-    public static function isUsername($value): bool
+    public static function isUsername(string|array $value): bool
     {
-        return static::is_facade(self::USERNAME_FILE, $value);
+        return static::isFacade(self::USERNAME_FILE, $value);
     }
 
-    /**
-     * @param string | array $value
-     */
-    public static function isEmail($value): bool
+    public static function isEmail(string|array $value): bool
     {
-        return static::is_facade(self::EMAIL_FILE, $value);
+        return static::isFacade(self::EMAIL_FILE, $value);
     }
 
-    /**
-     * @param string | array $value
-     */
-    public static function isBankAccount($value): bool
+    public static function isBankAccount(string|array $value): bool
     {
-        return static::is_facade(self::BANK_ACCOUNT_FILE, $value);
+        return static::isFacade(self::BANK_ACCOUNT_FILE, $value);
     }
 
-    /**
-     * @param string | array $value
-     */
-    public static function isIp($value): bool
+    public static function isIp(string|array $value): bool
     {
-        return static::is_facade(self::IP_FILE, $value);
+        return static::isFacade(self::IP_FILE, $value);
     }
 
-    private static function is_facade(string $scope, $value): bool
+    private static function isFacade(string $scope, string|array $value): bool
     {
         return is_array($value)
             ? static::isIn($scope, $value)
@@ -207,8 +190,8 @@ class Ban
 
     private static function isIn(string $scope, array $value): bool
     {
-        foreach ($value as $v) {
-            if (static::is($scope, $v)) {
+        foreach ($value as $val) {
+            if (static::is($scope, $val)) {
                 return true;
             }
         }

@@ -94,9 +94,9 @@ final class BanTest extends TestCase
 
     public function testIsBannedEmails(): void
     {
-        $as_array = array_merge(...$this->bannedEmailsProvider());
-        $this->assertNotEmpty($as_array);
-        $this->assertTrue(Ban::isEmail($as_array));
+        $bannedEmails = array_merge(...$this->bannedEmailsProvider());
+        $this->assertNotEmpty($bannedEmails);
+        $this->assertTrue(Ban::isEmail($bannedEmails));
     }
 
     public function testIsNotBannedEmail(): void
@@ -136,9 +136,9 @@ final class BanTest extends TestCase
 
     public function testIsBannedIps(): void
     {
-        $as_array = array_merge(...$this->bannedIpsProvider());
-        $this->assertNotEmpty($as_array);
-        $this->assertTrue(Ban::isIp($as_array));
+        $bannedIps = array_merge(...$this->bannedIpsProvider());
+        $this->assertNotEmpty($bannedIps);
+        $this->assertTrue(Ban::isIp($bannedIps));
     }
 
     public function testIsNotBannedIp(): void

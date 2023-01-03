@@ -46,7 +46,7 @@ if (Ban::isUsername($userinput, ['root', 'sudo', 'admin'])) {
 }
 
 // Validate of the userinput is a banned word _OR_ a banned username
-if (Ban::isAny($userinput, false, true, true)) {
+if (Ban::isAny($userinput, email: false, word: true, username: true)) {
     echo "$userinput is not allowed";
 }
 ```
