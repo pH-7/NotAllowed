@@ -9,62 +9,52 @@ declare(strict_types=1);
 
 namespace PH7\NotAllowed;
 
-use Exception;
+enum BannedType: string
+{
+    case USERNAME = 'usernames';
+    case EMAIL = 'emails';
+    case WORD = 'words';
+    case BANK_ACCOUNT = 'bank_accounts';
+    case IP = 'ips';
+
+    public function fileName(): string
+    {
+        return match ($this) {
+            BannedType::USERNAME => Ban::USERNAME_FILE,
+            BannedType::EMAIL => Ban::EMAIL_FILE,
+            BannedType::WORD => Ban::WORD_FILE,
+            BannedType::BANK_ACCOUNT => Ban::BANK_ACCOUNT_FILE,
+            BannedType::IP => Ban::IP_FILE,
+        };
+    }
+}
 
 class Ban
 {
     private const DATA_DIR = '/banned-data/';
     private const COMMENT_SIGN = '#';
 
-    private const USERNAME_FILE = 'usernames.txt';
-    private const EMAIL_FILE = 'emails.txt';
-    private const WORD_FILE = 'words.txt';
-    private const BANK_ACCOUNT_FILE = 'bank_accounts.txt';
-    private const IP_FILE = 'ips.txt';
-
-    private const USERNAME_TYPE = 'usernames';
-    private const EMAIL_TYPE = 'emails';
-    private const WORD_TYPE = 'words';
-    private const BANK_ACCOUNT_TYPE = 'bank_accounts';
-    private const IP_TYPE = 'ips';
+    public const USERNAME_FILE = 'usernames.txt';
+    public const EMAIL_FILE = 'emails.txt';
+    public const WORD_FILE = 'words.txt';
+    public const BANK_ACCOUNT_FILE = 'bank_accounts.txt';
+    public const IP_FILE = 'ips.txt';
 
     private static array $cache = [
-        self::IP_FILE => null,
         self::USERNAME_FILE => null,
-        self::BANK_ACCOUNT_FILE => null,
+        self::EMAIL_FILE => null,
         self::WORD_FILE => null,
-        self::EMAIL_FILE => null
+        self::BANK_ACCOUNT_FILE => null,
+        self::IP_FILE => null,
     ];
 
     /**
-     * @param string $scope Possible values are: usernames, words, ips, emails, bank_accounts
+     * @param BannedType $bannedType
      * @param string|array $value phrases to ban.
-     *
-     * @throws Exception When the given scope is invalid.
      */
-    public static function merge(string $scope, string|array $value): void
+    public static function merge(BannedType $bannedType, string|array $value): void
     {
-        self::setCaseInsensitive($scope);
-
-        switch ($scope) {
-            case self::USERNAME_TYPE:
-                $targetScope = self::USERNAME_FILE;
-                break;
-            case self::EMAIL_TYPE:
-                $targetScope = self::EMAIL_FILE;
-                break;
-            case self::WORD_TYPE:
-                $targetScope = self::WORD_FILE;
-                break;
-            case self::BANK_ACCOUNT_TYPE:
-                $targetScope = self::BANK_ACCOUNT_FILE;
-                break;
-            case self::IP_TYPE:
-                $targetScope = self::IP_FILE;
-                break;
-            default:
-                throw new Exception("Unsupported value $scope");
-        }
+        $targetScope = $bannedType->fileName();
 
         static::loadContents($targetScope);
 
@@ -73,14 +63,12 @@ class Ban
     }
 
     /**
-     * @param string $scope Possible values: usernames, words, ips, emails, bank_accounts
+     * @param BannedType $bannedType
      * @param string $path Full path of the file.
-     *
-     * @throws Exception
      */
-    public static function mergeFile(string $scope, string $path): void
+    public static function mergeFile(BannedType $bannedType, string $path): void
     {
-        static::merge($scope, static::readFile(realpath($path)));
+        static::merge($bannedType, static::readFile(realpath($path)));
     }
 
     /**
@@ -255,7 +243,7 @@ class Ban
 
     private static function loadContents(string $scope): void
     {
-        if (is_null(static::$cache[$scope])) {
+        if (static::$cache[$scope] === null) {
             static::$cache[$scope] = static::readFile(__DIR__ . self::DATA_DIR . $scope);
         }
     }
@@ -268,6 +256,11 @@ class Ban
     /**
      * Private Constructor & Cloning to prevent direct creation of object and blocking cloning.
      */
-    private function __construct() {}
-    private function __clone() {}
+    private function __construct()
+    {
+    }
+
+    private function __clone()
+    {
+    }
 }

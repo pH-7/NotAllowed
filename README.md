@@ -7,7 +7,7 @@ You can add easily new specific keywords (such as IPs, usernames, bank accounts,
 
 ## 🛠 Server Requirement
 
-- [PHP 8.0](https://www.php.net/releases/8.0/en.php) or higher.
+- [PHP 8.1](https://www.php.net/releases/8.1/en.php) or higher.
 
 
 ## 📓 Installation (with Composer)
@@ -108,5 +108,3 @@ Generously distributed under [MIT License][license-url]! 🎈
 [license-url]: https://opensource.org/licenses/MIT
 [twitter-image]: https://img.shields.io/twitter/url/https/shields.io.svg?style=social
 [twitter-url]: https://twitter.com/phenrysay
-
-

@@ -10,6 +10,7 @@ declare(strict_types=1);
 namespace PH7\NotAllowed\Tests;
 
 use PH7\NotAllowed\Ban;
+use PH7\NotAllowed\BannedType;
 use PHPUnit\Framework\TestCase;
 use ReflectionClass;
 
@@ -168,18 +169,18 @@ final class BanTest extends TestCase
 
         $this->assertFalse(Ban::isAll(['admin', 'retard'], true, true, true, true, true));
 
-        Ban::merge('usernames', ['retard']);
+        Ban::merge(BannedType::USERNAME, ['retard']);
 
         $this->assertTrue(Ban::isAll(['admin', 'retard'], true, true, true, true, true));
     }
 
     public function testExtendedValueIsMerged(): void
     {
-        Ban::merge('usernames', 'rickastley1987');
-        Ban::merge('words', 'foobar');
-        Ban::merge('emails', 'foobar@example.com');
-        Ban::merge('ips', '127.0.0.1');
-        Ban::merge('bank_accounts', '4539791001744107');
+        Ban::merge(BannedType::USERNAME, 'rickastley1987');
+        Ban::merge(BannedType::WORD, 'foobar');
+        Ban::merge(BannedType::EMAIL, 'foobar@example.com');
+        Ban::merge(BannedType::IP, '127.0.0.1');
+        Ban::merge(BannedType::BANK_ACCOUNT, '4539791001744107');
 
         $this->assertTrue(Ban::isUsername("rickastley1987"));
         $this->assertTrue(Ban::isWord("My favorite foobar is bazz"));
@@ -190,11 +191,11 @@ final class BanTest extends TestCase
 
     public function testExtendedValuesIsMerged(): void
     {
-        Ban::merge('usernames', ['rickastley1987', 'rickastley123']);
-        Ban::merge('words', ['foobar', 'buzz', 'bizz', 'bozz']);
-        Ban::merge('emails', ['foobar@example.com', 'noreply@mail.me']);
-        Ban::merge('ips', ['127.0.0.1', '127.0.0.2']);
-        Ban::merge('bank_accounts', ['4539791001744107', '4539791001744108']);
+        Ban::merge(BannedType::USERNAME, ['rickastley1987', 'rickastley123']);
+        Ban::merge(BannedType::WORD, ['foobar', 'buzz', 'bizz', 'bozz']);
+        Ban::merge(BannedType::EMAIL, ['foobar@example.com', 'noreply@mail.me']);
+        Ban::merge(BannedType::IP, ['127.0.0.1', '127.0.0.2']);
+        Ban::merge(BannedType::BANK_ACCOUNT, ['4539791001744107', '4539791001744108']);
 
         $this->assertTrue(Ban::isUsername("rickastley1987"));
         $this->assertTrue(Ban::isUsername("rickastley123"));
@@ -210,8 +211,8 @@ final class BanTest extends TestCase
 
     public function testExtendedFileIsMerged(): void
     {
-        Ban::mergeFile('usernames', './tests/fixtures/extended_usernames.txt');
-        Ban::mergeFile('words', './tests/fixtures/extended_words.txt');
+        Ban::mergeFile(BannedType::USERNAME, './tests/fixtures/extended_usernames.txt');
+        Ban::mergeFile(BannedType::WORD, './tests/fixtures/extended_words.txt');
 
         $this->assertTrue(Ban::isUsername('jtevesobs'));
         $this->assertTrue(Ban::isWord("Nice FUPA"));
