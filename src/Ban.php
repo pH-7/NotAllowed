@@ -92,15 +92,19 @@ class Ban
         if ($email && static::isEmail($value)) {
             return true;
         }
+
         if ($word && static::isWord($value)) {
             return true;
         }
+
         if ($username && static::isUsername($value)) {
             return true;
         }
+
         if ($ip && static::isIp($value)) {
             return true;
         }
+
         if ($bank_accounts && static::isBankAccount($value)) {
             return true;
         }
