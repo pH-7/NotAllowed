@@ -20,11 +20,11 @@ enum BannedType: string
     public function fileName(): string
     {
         return match ($this) {
-            BannedType::USERNAME => Ban::USERNAME_FILE,
-            BannedType::EMAIL => Ban::EMAIL_FILE,
-            BannedType::WORD => Ban::WORD_FILE,
-            BannedType::BANK_ACCOUNT => Ban::BANK_ACCOUNT_FILE,
-            BannedType::IP => Ban::IP_FILE,
+            self::USERNAME => Ban::USERNAME_FILE,
+            self::EMAIL => Ban::EMAIL_FILE,
+            self::WORD => Ban::WORD_FILE,
+            self::BANK_ACCOUNT => Ban::BANK_ACCOUNT_FILE,
+            self::IP => Ban::IP_FILE,
         };
     }
 }
