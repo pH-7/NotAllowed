@@ -19,7 +19,7 @@ composer require ph-7/notallowed
 
 ## 🎮 Usage
 
-Simple example of what you can do with it :)
+Simple example of what you can do with NotAllowed 🙂
 
 ```php
 use PH7\NotAllowed\Ban;
@@ -45,14 +45,16 @@ if (Ban::isUsername($userInput, ['root', 'sudo', 'admin'])) {
     echo "$userInput is not allowed";
 }
 
-// Validate if the userInput is a banned word *OR* a banned username
+// Check if $userInput contains a banned word OR a banned username
 if (Ban::isAny($userInput, email: false, word: true, username: true)) {
     echo "$userInput is not allowed";
 }
 ```
 
 ### Extending Banned Phrases
+
 You can supply your own values to be merged with the out-of-box banned data in 2 ways:
+
 1. `Ban::merge(string $scope, string | array $value)`
 2. `Ban::mergeFile(string $scope, string $path)`
 
