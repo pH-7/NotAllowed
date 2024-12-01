@@ -1,8 +1,8 @@
 # 🚫 Not Allowed 🚫
 
-**NotAllowed** is a simple lightweight PHP 8.1 library that helps you to censor words, profane words, blacklisted IPs, forbidden user names, banned bank card numbers, etc.
+**NotAllowed** is a simple, lightweight PHP 8.1 library that helps you censor words, profane words, blacklisted IPs, forbidden usernames, banned bank card numbers, etc.
 
-You can add easily new specific keywords (such as IPs, usernames, bank accounts, words, etc) to ban in `~/src/banned-data/*` folder.
+You can easily add new specific keywords (such as IPs, usernames, bank accounts, words, etc.) to be banned in `~/src/banned-data/*` folder.
 
 
 ## 🛠 Server Requirement
@@ -19,7 +19,7 @@ composer require ph-7/notallowed
 
 ## 🎮 Usage
 
-Simple example of what you can do with it :)
+Simple example of what you can do with NotAllowed 🙂
 
 ```php
 use PH7\NotAllowed\Ban;
@@ -29,37 +29,36 @@ if (Ban::isUsername('admin')) {
 }
 
 if (Ban::isEmail('james@spamhole.com')) {
-    echo '"@spamhole.com" domain is considered as a email spam host.';
+    echo '"@spamhole.com" domain is considered a spam email host.';
 }
 
 if (Ban::isWord('He is an asshole')) {
     echo 'Please watch your mouth :-)';
 }
 
-if(Ban::isIp('1.170.36.229')) {
+if (Ban::isIp('1.170.36.229')) {
     echo 'This IP address is blacklisted';
 }
 
-$userinput = 'admin';
-if (Ban::isUsername($userinput, ['root', 'sudo', 'admin'])) {
-    echo "$userinput is not allowed";
+$userInput = 'admin';
+if (Ban::isUsername($userInput, ['root', 'sudo', 'admin'])) {
+    echo "$userInput is not allowed";
 }
 
-// Validate of the userinput is a banned word _OR_ a banned username
-if (Ban::isAny($userinput, email: false, word: true, username: true)) {
-    echo "$userinput is not allowed";
+// Check if $userInput contains a banned word OR a banned username
+if (Ban::isAny($userInput, email: false, word: true, username: true)) {
+    echo "$userInput is not allowed";
 }
 ```
 
 ### Extending Banned Phrases
 
-You can supply your own values to be merged with the out-of-box banned-data 2 ways
+You can supply your own values to be merged with the out-of-box banned data in 2 ways:
 
 1. `Ban::merge(string $scope, string | array $value)`
 2. `Ban::mergeFile(string $scope, string $path)`
 
 `$scope` refers to the category of data. Possible values are currently:
-
 - usernames
 - words
 - ips
@@ -76,9 +75,8 @@ Ban::mergeFile('emails', './my_banned_emails.txt');
 ```
 </details>
 
+Now simply validate per normal conventions.
 
-
-Now simply validate per normal conventions
 
 ## 🚀 Author
 
@@ -88,9 +86,10 @@ Now simply validate per normal conventions
 
 [![Pierre-Henry Soria](https://avatars0.githubusercontent.com/u/1325411?s=220)](https://pierrehenry.be "Pierre-Henry - Software Developer Website :-)")
 
-## 👩🏻‍💻 Helpers
+### 👩🏻‍💻 Helpers
 
 **[soulshined](https://github.com/soulshined)** - just a coder
+
 
 ## 🧐 Used By...
 
