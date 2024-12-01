@@ -2,7 +2,7 @@
 
 **NotAllowed** is a simple, lightweight PHP 8.1 library that helps you censor words, profane words, blacklisted IPs, forbidden usernames, banned bank card numbers, etc.
 
-You can easily add new specific keywords (such as IPs, usernames, bank accounts, words, etc.) to ban in the ~/src/banned-data/* folder.
+You can easily add new specific keywords (such as IPs, usernames, bank accounts, words, etc.) to ban in the `~/src/banned-data/*` folder.
 
 
 ## 🛠 Server Requirement
